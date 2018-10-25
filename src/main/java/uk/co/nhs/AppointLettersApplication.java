@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EnableJpaRepositories(basePackages = "uk.co.nhs.repository")
 @SpringBootApplication
-public class SpringJpaHibernateExampleApplication {
+public class AppointLettersApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringJpaHibernateExampleApplication.class, args);
+		SpringApplication.run(AppointLettersApplication.class, args);
 	}
 }
