@@ -1,4 +1,4 @@
-FROM artifactory.dataengineering.apps.hmrci:8001/openjdk:8u151-jdk-alpine3.7
+FROM openjdk:8u151-jdk-alpine3.7
 
 ENV APP_USER java
 
