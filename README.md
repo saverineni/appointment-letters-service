@@ -3,10 +3,10 @@ This project is to view patient appointment letters
 
 ## Description
 This Project shows the list of Users which are stored in the MySql Database. Using the following endpoints, different operations can be achieved:
-- `http://localhost:8080/user` - This creates a new user, require body in the request
-- `http://localhost:8080/user/11` - This updates a user, require body in the request
-- `http://localhost:8080/forgot?username=saverineni` - This sends an email with password rest link
-- `http://localhost:8080/users` - This returns the list of Users
+- `http://localhost:8000/user` - This creates a new user, require body in the request
+- `http://localhost:8000/user/11` - This updates a user, require body in the request
+- `http://localhost:8000/forgot?username=saverineni` - This sends an email with password rest link
+- `http://localhost:8000/users` - This returns the list of Users
 
 ## Libraries used
 - Spring Boot

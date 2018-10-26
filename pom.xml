@@ -5,11 +5,11 @@
 
 	<groupId>uk.co.nhs</groupId>
 	<artifactId>appointment-letters</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>appointment-letters</name>
-	<description>Demo project for Spring Boot</description>
+	<description>NHS project to view appointment letters</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -69,6 +69,26 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+			<!--<plugin>-->
+				<!--<groupId>com.spotify</groupId>-->
+				<!--<artifactId>dockerfile-maven-plugin</artifactId>-->
+				<!--<version>1.4.8</version>-->
+				<!--<executions>-->
+					<!--<execution>-->
+						<!--<id>default</id>-->
+						<!--<goals>-->
+							<!--<goal>build</goal>-->
+							<!--&lt;!&ndash;<goal>push</goal>&ndash;&gt;-->
+						<!--</goals>-->
+					<!--</execution>-->
+				<!--</executions>-->
+				<!--<configuration>-->
+					<!--<buildArgs>-->
+						<!--<JAR_FILE>target/${project.artifactId}.jar</JAR_FILE>-->
+					<!--</buildArgs>-->
+				<!--</configuration>-->
+			<!--</plugin>-->
 		</plugins>
 	</build>
 
