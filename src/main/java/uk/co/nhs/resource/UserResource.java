@@ -13,9 +13,9 @@ import uk.co.nhs.model.Email;
 import uk.co.nhs.model.User;
 import uk.co.nhs.repository.UsersRepository;
 import uk.co.nhs.services.EmailService;
+import uk.co.nhs.utils.RandomPasswordGenerator;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.UUID;
 
 @RestController
 @Slf4j
@@ -27,6 +27,8 @@ public class UserResource {
     private EmailService emailService;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private RandomPasswordGenerator randomPasswordGenerator;
 
     @GetMapping("/user/{id}")
     public ResponseEntity<?> getUser(@PathVariable("id") final Long id) {
@@ -61,15 +63,14 @@ public class UserResource {
 
         usersRepository.findByUsername(username)
                 .map(user -> {
-                    user.setResetToken(UUID.randomUUID().toString());
+                    String password = randomPasswordGenerator.generate();
+                    user.setPassword(password);
                     usersRepository.save(user);
-                    String appUrl = String.format("%s://%s:%s/reset?token=%s",
-                            request.getScheme(), request.getServerName(),
-                            request.getServerPort(), user.getResetToken());
+
                     Email email = Email.builder()
                             .to(user.getEmail())
                             .subject("Reset your NHS appointment letters password")
-                            .body(createEmailBody(user.getUserFullName(), appUrl))
+                            .body(createEmailBody(user.getUserFullName(), password))
                             .build();
 
                     emailService.sendEmail(email);
@@ -78,12 +79,13 @@ public class UserResource {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private String createEmailBody(String name, String url) {
+
+
+    private String createEmailBody(String name, String password) {
 
         return  "Hello "+ name +",\n\n" +
                     "We have received a request to reset your password.\n\n" +
-                    "In order to do this please copy the following link into your web browser and then enter\n\n" +
-                    url +"\n\n" +
+                    "Your Temporary Password :"+ password+"\n\n" +
                     "If you have not requested a password reset then please contact us immediately. \n\n" +
                     "Our phone number is 0161 875 1414.\n\n" +
                     "Thank you.\n\n" +
