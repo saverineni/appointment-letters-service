@@ -29,6 +29,7 @@ public class UsersResource {
 
     @PostMapping("/user")
     public User createUser(@RequestBody User user) {
+        user.setEnabled(true);
         return usersRepository.save(user);
     }
 
@@ -60,7 +61,7 @@ public class UsersResource {
                                             request.getScheme(), request.getServerName(), request.getServerPort(), user.getResetToken());
             Email email = Email.builder()
                     .to(user.getEmail())
-                    .subject("Password Reset Request")
+                    .subject("Reset your NHS appointment letters password")
                     .body(createEmailBody(user.getUserFullName(), appUrl))
                     .build();
 

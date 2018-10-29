@@ -1,14 +1,15 @@
 package uk.co.nhs.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
@@ -45,12 +46,23 @@ public class User {
     @Column(name = "enabled")
     private boolean enabled;
 
-    @Column(name = "createdOn")
-    private Date createdOn;
-
+    @JsonIgnore
     @Column(name = "resetToken")
     private String resetToken;
 
+    @JsonIgnore
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "createdOn", nullable = false, updatable = false)
+    private Date createdOn;
+
+    @JsonIgnore
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updatedOn")
+    private Date updatedOn;
+
+    @JsonIgnore
     public String getUserFullName(){
         return this.firstName +" "+ this.lastName;
     }
