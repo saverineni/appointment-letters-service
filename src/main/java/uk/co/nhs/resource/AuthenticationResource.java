@@ -1,17 +1,24 @@
 package uk.co.nhs.resource;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.VndErrors;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import uk.co.nhs.dto.LoginRequest;
+import uk.co.nhs.exception.UserNotFoundException;
+import uk.co.nhs.model.User;
+import uk.co.nhs.repository.UsersRepository;
 import uk.co.nhs.responses.AuthenticationTokenResponse;
 import uk.co.nhs.security.jwt.JwtTokenService;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/authentication")
@@ -25,14 +32,17 @@ public class AuthenticationResource {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenService tokenGenerator;
     private final int timeToLive;
+    private UsersRepository usersRepository;
 
     public AuthenticationResource(
             @Value("${jwt.expiration.seconds}") int jwtExpirationSeconds,
             AuthenticationManager authenticationManager,
-            JwtTokenService tokenGenerator) {
+            JwtTokenService tokenGenerator,
+            UsersRepository usersRepository) {
         this.authenticationManager = authenticationManager;
         this.tokenGenerator = tokenGenerator;
         this.timeToLive = jwtExpirationSeconds;
+        this.usersRepository = usersRepository;
     }
 
     @PostMapping("/generateToken")
@@ -44,6 +54,8 @@ public class AuthenticationResource {
         AuthenticationTokenResponse authenticationResponse = new AuthenticationTokenResponse();
         authenticationResponse.setToken(token);
         authenticationResponse.setTimeToLive(timeToLive);
+        usersRepository.findByUsername(loginRequest.getUsername())
+                .ifPresent(user -> authenticationResponse.setId(user.getId()));
         return authenticationResponse;
     }
 

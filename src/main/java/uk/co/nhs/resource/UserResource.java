@@ -3,7 +3,6 @@ package uk.co.nhs.resource;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.VndErrors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +15,6 @@ import uk.co.nhs.repository.UsersRepository;
 import uk.co.nhs.services.EmailService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -31,9 +28,11 @@ public class UserResource {
     @Autowired
     private ModelMapper modelMapper;
 
-    @GetMapping("/users")
-    public List<User> getAll() {
-        return usersRepository.findAll();
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> getUser(@PathVariable("id") final Long id) {
+        return usersRepository.findById(id)
+                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @PostMapping("/user")
@@ -57,31 +56,26 @@ public class UserResource {
         .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    @GetMapping("/forgot")
+    @GetMapping("/forgotPassword")
     public ResponseEntity<?> forgotPassword(HttpServletRequest request, @RequestParam("username") final String username) {
-        Optional<User> userOptional = usersRepository.findByUsername(username);
-        String userEmail = null;
-        if (!userOptional.isPresent()) {
-            log.error("We didn't find an account for the username: {}", username);
-        } else {
 
-            User user = userOptional.get();
-            userEmail = user.getEmail();
-            user.setResetToken(UUID.randomUUID().toString());
-            usersRepository.save(user);
-            String appUrl = String.format("%s://%s:%s/reset?token=%s",
-                                            request.getScheme(), request.getServerName(), request.getServerPort(), user.getResetToken());
-            Email email = Email.builder()
-                    .to(userEmail)
-                    .subject("Reset your NHS appointment letters password")
-                    .body(createEmailBody(user.getUserFullName(), appUrl))
-                    .build();
+        usersRepository.findByUsername(username)
+                .map(user -> {
+                    user.setResetToken(UUID.randomUUID().toString());
+                    usersRepository.save(user);
+                    String appUrl = String.format("%s://%s:%s/reset?token=%s",
+                            request.getScheme(), request.getServerName(),
+                            request.getServerPort(), user.getResetToken());
+                    Email email = Email.builder()
+                            .to(user.getEmail())
+                            .subject("Reset your NHS appointment letters password")
+                            .body(createEmailBody(user.getUserFullName(), appUrl))
+                            .build();
 
-            emailService.sendEmail(email);
-
-        }
-        return new ResponseEntity<>(String.format("{\"message\":\"password reset email has been sent to the email address provided\"}"), HttpStatus.OK);
-
+                    emailService.sendEmail(email);
+                    return new ResponseEntity<>(HttpStatus.OK);
+                });
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private String createEmailBody(String name, String url) {
