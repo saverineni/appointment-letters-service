@@ -3,8 +3,10 @@ package uk.co.nhs.model;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -34,6 +36,9 @@ public class User {
 
     @Column(name = "enabled")
     private boolean enabled = true;
+
+    @Column(name = "dateOfBirth")
+    private LocalDate dateOfBirth;;
 
     @Column(name = "resetToken")
     private String resetToken;
