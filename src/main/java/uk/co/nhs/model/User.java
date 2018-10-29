@@ -1,17 +1,11 @@
 package uk.co.nhs.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Date;
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+import java.util.Date;
 
 @Entity
 @Table(name = "user")
@@ -24,45 +18,36 @@ public class User {
     private long id;
 
     @Column(name = "username", nullable = false)
-    @NotEmpty(message = "Please provide an username")
     private String username;
 
     @Column(name = "email", nullable = false, unique = true)
-    @Email(message = "Please provide a valid e-mail")
-    @NotEmpty(message = "Please provide an e-mail")
     private String email;
 
     @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "firstName")
-    @NotEmpty(message = "Please provide your first name")
     private String firstName;
 
     @Column(name = "lastName")
-    @NotEmpty(message = "Please provide your last name")
     private String lastName;
 
     @Column(name = "enabled")
-    private boolean enabled;
+    private boolean enabled = true;
 
-    @JsonIgnore
     @Column(name = "resetToken")
     private String resetToken;
 
-    @JsonIgnore
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdOn", nullable = false, updatable = false)
     private Date createdOn;
 
-    @JsonIgnore
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updatedOn")
     private Date updatedOn;
 
-    @JsonIgnore
     public String getUserFullName(){
         return this.firstName +" "+ this.lastName;
     }

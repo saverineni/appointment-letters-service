@@ -1,4 +1,4 @@
-package uk.co.nhs.dto.authentication;
+package uk.co.nhs.dto;
 
 import lombok.Data;
 
