@@ -1,4 +1,4 @@
-package uk.co.nhs.model;
+package uk.co.nhs.api.model;
 
 import lombok.Builder;
 import lombok.Data;

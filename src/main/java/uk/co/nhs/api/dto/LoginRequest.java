@@ -1,4 +1,4 @@
-package uk.co.nhs.dto;
+package uk.co.nhs.api.dto;
 
 import lombok.Data;
 

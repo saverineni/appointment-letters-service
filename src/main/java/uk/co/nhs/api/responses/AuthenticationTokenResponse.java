@@ -1,4 +1,4 @@
-package uk.co.nhs.responses;
+package uk.co.nhs.api.responses;
 
 import lombok.Data;
 

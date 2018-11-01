@@ -1,21 +1,25 @@
-package uk.co.nhs.resource;
+package uk.co.nhs.api.resource;
 
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.VndErrors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uk.co.nhs.dto.UserCreationRequest;
-import uk.co.nhs.dto.UserUpdateRequest;
-import uk.co.nhs.exception.UserNotFoundException;
-import uk.co.nhs.model.Email;
-import uk.co.nhs.model.User;
+import uk.co.nhs.api.dto.UserCreationRequest;
+import uk.co.nhs.api.dto.UserUpdateRequest;
+import uk.co.nhs.api.exception.UserNotFoundException;
+import uk.co.nhs.api.model.Email;
+import uk.co.nhs.api.model.User;
+import uk.co.nhs.api.responses.Message;
+import uk.co.nhs.api.responses.UserResponse;
 import uk.co.nhs.repository.UsersRepository;
 import uk.co.nhs.services.EmailService;
 import uk.co.nhs.utils.RandomPasswordGenerator;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -33,15 +37,27 @@ public class UserResource {
     @GetMapping("/user/{id}")
     public ResponseEntity<?> getUser(@PathVariable("id") final Long id) {
         return usersRepository.findById(id)
-                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                .map(user -> new ResponseEntity<>(convertToEntity(user), HttpStatus.OK))
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @PostMapping("/user")
     public ResponseEntity<?> createUser(@RequestBody UserCreationRequest userCreationRequest) {
         User user = convertToEntity(userCreationRequest);
-        usersRepository.save(user);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return userCreationChecks(user);
+    }
+
+    private ResponseEntity<?> userCreationChecks(User user) {
+        Optional<User> userByUsername = usersRepository.findByUsername(user.getUsername());
+        if(userByUsername.isPresent()) {
+            return new ResponseEntity<>(new Message("user already exists with the username " + user.getUsername()), HttpStatus.CONFLICT);
+        }
+        Optional<User> userByEmail = usersRepository.findByEmail(user.getEmail());
+        if(userByEmail.isPresent()) {
+            return new ResponseEntity<>(new Message( "user already exists with the email " + user.getEmail()),HttpStatus.CONFLICT);
+        }
+        User save = usersRepository.save(user);
+        return new ResponseEntity<>("{\"id\" :\""+user.getId()+"\"}",HttpStatus.CREATED);
     }
 
     @PutMapping("/user/{id}")
@@ -94,5 +110,9 @@ public class UserResource {
 
     private User convertToEntity(UserCreationRequest userCreationRequest) {
         return  modelMapper.map(userCreationRequest, User.class);
+    }
+
+    private UserResponse convertToEntity(User user) {
+        return modelMapper.map(user, UserResponse.class);
     }
 }

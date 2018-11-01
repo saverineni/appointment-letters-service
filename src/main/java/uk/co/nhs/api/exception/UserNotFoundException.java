@@ -1,4 +1,4 @@
-package uk.co.nhs.exception;
+package uk.co.nhs.api.exception;
 
 public class UserNotFoundException extends RuntimeException {
 

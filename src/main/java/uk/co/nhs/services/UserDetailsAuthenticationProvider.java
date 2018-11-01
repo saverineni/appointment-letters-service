@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import uk.co.nhs.model.User;
+import uk.co.nhs.api.model.User;
 import uk.co.nhs.repository.UsersRepository;
 import uk.co.nhs.security.jwt.JwtAuthenticationToken;
 

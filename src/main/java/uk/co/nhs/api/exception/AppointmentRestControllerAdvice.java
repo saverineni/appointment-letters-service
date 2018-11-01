@@ -1,4 +1,4 @@
-package uk.co.nhs.exception;
+package uk.co.nhs.api.exception;
 
 import org.springframework.hateoas.VndErrors;
 import org.springframework.http.HttpStatus;
@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import uk.co.nhs.resource.AuthenticationResource;
+import uk.co.nhs.api.resource.AuthenticationResource;
 
 @RestControllerAdvice
 public class AppointmentRestControllerAdvice {
