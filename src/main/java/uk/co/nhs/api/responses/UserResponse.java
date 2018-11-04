@@ -16,7 +16,7 @@ public class UserResponse {
     private String dateOfBirth;
 
     public void setDateOfBirth(LocalDate dateOfBirth){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         this.dateOfBirth=dateOfBirth.format(formatter);
     }
 }

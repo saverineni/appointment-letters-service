@@ -12,9 +12,9 @@ import uk.co.nhs.api.resource.AuthenticationResource;
 @RestControllerAdvice
 public class AppointmentRestControllerAdvice {
     @ResponseBody
-    @ExceptionHandler(UserNotFoundException.class)
+    @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    VndErrors bookNotFoundExceptionHandler(UserNotFoundException ex) {
+    VndErrors bookNotFoundExceptionHandler(ResourceNotFoundException ex) {
         return new VndErrors("error", ex.getMessage());
     }
 

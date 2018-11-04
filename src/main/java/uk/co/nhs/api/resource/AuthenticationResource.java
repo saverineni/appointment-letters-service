@@ -49,7 +49,7 @@ public class AuthenticationResource {
         authenticationResponse.setToken(token);
         authenticationResponse.setTimeToLive(timeToLive);
         usersRepository.findByUsername(loginRequest.getUsername())
-                .ifPresent(user -> authenticationResponse.setId(user.getId()));
+                .ifPresent(user -> authenticationResponse.setId(user.getUserId()));
         return authenticationResponse;
     }
 

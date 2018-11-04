@@ -99,7 +99,7 @@
 2018-10-27 00:26:58.474  WARN 13077 --- [           main] aWebConfiguration$JpaWebMvcConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
 2018-10-27 00:26:58.514  INFO 13077 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/users],methods=[GET]}" onto public java.util.List<uk.co.nhs.model.User> uk.co.nhs.resource.UsersResource.getAll()
 2018-10-27 00:26:58.516  INFO 13077 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/user],methods=[POST]}" onto public uk.co.nhs.model.User uk.co.nhs.resource.UsersResource.createUser(uk.co.nhs.model.User)
-2018-10-27 00:26:58.516  INFO 13077 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/user/{id}],methods=[PUT]}" onto public uk.co.nhs.model.User uk.co.nhs.resource.UsersResource.updateUser(java.lang.Long,uk.co.nhs.model.User)
+2018-10-27 00:26:58.516  INFO 13077 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/user/{hospital_id}],methods=[PUT]}" onto public uk.co.nhs.model.User uk.co.nhs.resource.UsersResource.updateUser(java.lang.Long,uk.co.nhs.model.User)
 2018-10-27 00:26:58.516  INFO 13077 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/forgot],methods=[GET]}" onto public uk.co.nhs.model.User uk.co.nhs.resource.UsersResource.forgotPassword(javax.servlet.http.HttpServletRequest,java.lang.String)
 2018-10-27 00:26:58.519  INFO 13077 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
 2018-10-27 00:26:58.519  INFO 13077 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
@@ -180,7 +180,7 @@
 [INFO] Successfully built d5ef47826f8d
 [INFO] Successfully tagged saverineni/appointment-letters-service:1.0.0
 [INFO] 
-[INFO] Detected build of image with id d5ef47826f8d
+[INFO] Detected build of image with hospital_id d5ef47826f8d
 [INFO] Building jar: /Users/suresh.averineni/workspace/nhs-workspace/appointment-letters-service/target/appointment-letters-service-1.0.0-docker-info.jar
 [INFO] Successfully built saverineni/appointment-letters-service:1.0.0
 [INFO] 
