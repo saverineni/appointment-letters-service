@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -50,10 +51,8 @@ public class User {
     @Column(name = "updatedOn")
     private Date updatedOn;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(name = "user_hospital", joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "hospital_id") })
-    private List<Hospital> hospitals;
+    @ManyToMany(mappedBy = "users")
+    private Set<Hospital> hospitals;
 
     public String getUserFullName(){
         return this.firstName +" "+ this.lastName;

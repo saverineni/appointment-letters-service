@@ -94,7 +94,7 @@ public class UserResource {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}/hospitals")
+    @GetMapping("/user/{userId}/hospitals")
     public ResponseEntity<?> getHospitalsByUser(@PathVariable("userId") final Long userId) {
         return usersRepository.findById(userId)
                 .map(user -> new ResponseEntity<>(user.getHospitals(), HttpStatus.OK))
