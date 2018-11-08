@@ -1,12 +1,17 @@
 package uk.co.nhs.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -17,8 +22,8 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", nullable = false, updatable = false)
-    private long userId;
+    @Column(name = "id", nullable = false, updatable = false)
+    private long id;
 
     @Column(name = "username", nullable = false, unique = true)
     private String username;
@@ -51,8 +56,9 @@ public class User {
     @Column(name = "updatedOn")
     private Date updatedOn;
 
-    @ManyToMany(mappedBy = "users")
-    private Set<Hospital> hospitals;
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Set<Hospital> hospitals = new HashSet<>();
 
     public String getUserFullName(){
         return this.firstName +" "+ this.lastName;

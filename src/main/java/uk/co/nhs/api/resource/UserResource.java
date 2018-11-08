@@ -33,11 +33,11 @@ public class UserResource {
     @Autowired
     private RandomPasswordGenerator randomPasswordGenerator;
 
-    @GetMapping("/user/{user_id}")
-    public ResponseEntity<?> getUser(@PathVariable("user_id") final Long userId) {
-        return usersRepository.findById(userId)
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> getUser(@PathVariable("id") final Long id) {
+        return usersRepository.findById(id)
                 .map(user -> new ResponseEntity<>(convertToEntity(user), HttpStatus.OK))
-                .orElseThrow(() -> new ResourceNotFoundException(userId));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     @PostMapping("/user")
@@ -56,13 +56,13 @@ public class UserResource {
             return new ResponseEntity<>(new Message( "user already exists with the email " + user.getEmail()),HttpStatus.CONFLICT);
         }
         User save = usersRepository.save(user);
-        return new ResponseEntity<>("{\"user_id\" :\""+user.getUserId()+"\"}",HttpStatus.CREATED);
+        return new ResponseEntity<>("{\"id\" :\""+user.getId()+"\"}",HttpStatus.CREATED);
     }
 
-    @PutMapping("/user/{user_id}")
+    @PutMapping("/user/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> updateUser(@PathVariable("user_id") final Long userId, @RequestBody UserUpdateRequest userUpdateRequest) {
-        return  usersRepository.findById(userId)
+    public ResponseEntity<?> updateUser(@PathVariable("id") final Long id, @RequestBody UserUpdateRequest userUpdateRequest) {
+        return  usersRepository.findById(id)
                 .map( existingUser -> {
                     existingUser.setEmail(userUpdateRequest.getEmail());
                     existingUser.setFirstName(userUpdateRequest.getFirstName());
@@ -70,7 +70,7 @@ public class UserResource {
                     usersRepository.save(existingUser);
                     return new ResponseEntity<>(HttpStatus.OK);
         })
-        .orElseThrow(() -> new ResourceNotFoundException(userId));
+        .orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     @GetMapping("/forgotPassword")
@@ -93,14 +93,6 @@ public class UserResource {
                 });
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    @GetMapping("/user/{userId}/hospitals")
-    public ResponseEntity<?> getHospitalsByUser(@PathVariable("userId") final Long userId) {
-        return usersRepository.findById(userId)
-                .map(user -> new ResponseEntity<>(user.getHospitals(), HttpStatus.OK))
-                .orElseThrow(() -> new ResourceNotFoundException(userId));
-    }
-
 
     private String createEmailBody(String name, String password) {
 

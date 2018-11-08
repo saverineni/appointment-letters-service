@@ -10,13 +10,9 @@ import uk.co.nhs.api.dto.HospitalCreationRequest;
 import uk.co.nhs.api.dto.HospitalUpdateRequest;
 import uk.co.nhs.api.exception.ResourceNotFoundException;
 import uk.co.nhs.api.model.Hospital;
-import uk.co.nhs.api.model.User;
 import uk.co.nhs.api.responses.HospitalResponse;
 import uk.co.nhs.repository.HospitalsRepository;
 import uk.co.nhs.repository.UsersRepository;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @RestController
 @Slf4j
@@ -29,34 +25,41 @@ public class HospitalResource {
     @Autowired
     private ModelMapper modelMapper;
 
-    @GetMapping("/hospital/{hospitalId}")
-    public ResponseEntity<?> getHospital(@PathVariable("hospitalId") final Long hospitalId) {
-        return hospitalsRepository.findById(hospitalId)
-                .map(hospital -> new ResponseEntity<>(convertToEntity(hospital), HttpStatus.OK))
-                .orElseThrow(() -> new ResourceNotFoundException(hospitalId));
+    @GetMapping("/user/{id}/hospitals")
+    public ResponseEntity<?> getHospitalsByUser(@PathVariable("id") final Long id) {
+        return usersRepository.findById(id)
+                .map(user -> new ResponseEntity<>(user.getHospitals(), HttpStatus.OK))
+                .orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
-    @PostMapping("/user/{userId}/hospital")
-    public ResponseEntity<?> createHospital(@PathVariable("userId") final Long userId,
+    @GetMapping("/hospital/{id}")
+    public ResponseEntity<?> getHospital(@PathVariable("id") final Long id) {
+        return hospitalsRepository.findById(id)
+                .map(hospital -> new ResponseEntity<>(convertToEntity(hospital), HttpStatus.OK))
+                .orElseThrow(() -> new ResourceNotFoundException(id));
+    }
+
+    @PostMapping("/user/{id}/hospital")
+    public ResponseEntity<?> createHospital(@PathVariable("id") final Long id,
                                             @RequestBody HospitalCreationRequest hospitalCreationRequest) {
-       return  usersRepository.findById(userId)
+       return  usersRepository.findById(id)
                 .map(user -> {
                     Hospital hospital = convertToEntity(hospitalCreationRequest);
-                    hospital.addUser(user);
+                    hospital.setUser(user);
                     hospitalsRepository.save(hospital);
-                    return new ResponseEntity<>("{\"hospitalId\" :\"" + hospital.getHospitalId() + "\"}", HttpStatus.CREATED);
-                }).orElseThrow(() -> new ResourceNotFoundException(userId));
+                    return new ResponseEntity<>("{\"id\" :\"" + hospital.getId() + "\"}", HttpStatus.CREATED);
+                }).orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
-    @PutMapping("/user/hospital/{hospitalId}")
-    public ResponseEntity<?> updateHospital(@PathVariable("hospitalId") final Long hospitalId, @RequestBody HospitalUpdateRequest hospitalUpdateRequest) {
-        return  hospitalsRepository.findById(hospitalId)
+    @PutMapping("/user/hospital/{id}")
+    public ResponseEntity<?> updateHospital(@PathVariable("id") final Long id, @RequestBody HospitalUpdateRequest hospitalUpdateRequest) {
+        return  hospitalsRepository.findById(id)
                 .map( existingHospital -> {
                     existingHospital.setHospitalName(hospitalUpdateRequest.getHospitalName());
                     hospitalsRepository.save(existingHospital);
                     return new ResponseEntity<>(HttpStatus.OK);
         })
-        .orElseThrow(() -> new ResourceNotFoundException(hospitalId));
+        .orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     private HospitalResponse convertToEntity(Hospital hospital) {

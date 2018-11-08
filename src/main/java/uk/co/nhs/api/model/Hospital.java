@@ -1,32 +1,38 @@
 package uk.co.nhs.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "hospital")
 @Data
+@EqualsAndHashCode(exclude = "user")
+@ToString(exclude = "user")
 public class Hospital {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "hospital_id", nullable = false, updatable = false)
+    @Column(name = "id", nullable = false, updatable = false)
+    private long id;
+
+    @Column(name = "hospital_id", nullable = false)
     private long hospitalId;
 
     @Column(name = "hospital_name", nullable = false)
     private String hospitalName;
 
-
-    @ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(name = "user_hospital", joinColumns = { @JoinColumn(name = "hospital_id", nullable = true) },
-            inverseJoinColumns = { @JoinColumn(name = "user_id", nullable = true, referencedColumnName = "user_id") })
-    private Set<User> users = new HashSet<>();
-
-    public void addUser(User user) {
-        users.add(user);
-    }
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id",referencedColumnName ="id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnoreProperties("hospitals")
+    @JsonIgnore
+    private User user;
 
 }

@@ -7,6 +7,6 @@ import java.time.LocalDate;
 
 @Data
 public class HospitalCreationRequest {
-    private long userId;
+    private long hospitalId;
     private String hospitalName;
 }
