@@ -67,6 +67,7 @@ public class UserResource {
                     existingUser.setEmail(userUpdateRequest.getEmail());
                     existingUser.setFirstName(userUpdateRequest.getFirstName());
                     existingUser.setLastName(userUpdateRequest.getLastName());
+                    existingUser.setDateOfBirth(userUpdateRequest.getDateOfBirth());
                     usersRepository.save(existingUser);
                     return new ResponseEntity<>(HttpStatus.OK);
         })

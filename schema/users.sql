@@ -30,3 +30,11 @@ CREATE TABLE `hospital` (
   `hospital_name` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+
+CREATE TABLE appointment_letters.`appointment` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `hospital_id` bigint(20) NOT NULL,
+  `dateOfAppointment` date NOT NULL,
+  `timeOfAppointment` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;

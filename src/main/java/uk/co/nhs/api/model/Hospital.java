@@ -9,6 +9,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "hospital")
@@ -28,11 +30,12 @@ public class Hospital {
     @Column(name = "hospital_name", nullable = false)
     private String hospitalName;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id",referencedColumnName ="id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnoreProperties("hospitals")
     @JsonIgnore
     private User user;
+
+    @OneToMany(mappedBy = "hospital")
+    private Set<Appointment> appointments = new HashSet<>();
 
 }

@@ -82,10 +82,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
-//        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
-//        bean.setOrder(Integer.MIN_VALUE);
-//        bean.setName("CORS Filter");
-//        return (CorsFilter) bean.getFilter();
-         return new CorsFilter(source);
+        return new CorsFilter(source);
     }
 }
