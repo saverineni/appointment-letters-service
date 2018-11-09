@@ -3,8 +3,9 @@ select * from appointment_letters.user;
 select * from appointment_letters.hospital;
 
 drop table appointment_letters.user_hospital; commit;
-drop table  appointment_letters.user; commit;
-drop table   appointment_letters.hospital; commit;
+drop table appointment_letters.hospital; commit;
+drop table appointment_letters.user; commit;
+
 
 CREATE TABLE appointment_letters.`user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
