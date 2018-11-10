@@ -6,7 +6,8 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class HospitalCreationRequest {
+public class HospitalDTO {
+    private long id;
     private long hospitalId;
     private String hospitalName;
 }

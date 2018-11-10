@@ -10,13 +10,14 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class UserCreationRequest {
+public class UserDTO {
+    private long id;
     private String username;
     private String email;
     private String password;
     private String firstName;
     private String lastName;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate dateOfBirth;
 }

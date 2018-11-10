@@ -6,13 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uk.co.nhs.api.dto.UserCreationRequest;
+import uk.co.nhs.api.dto.UserDTO;
 import uk.co.nhs.api.dto.UserUpdateRequest;
 import uk.co.nhs.api.exception.ResourceNotFoundException;
 import uk.co.nhs.api.model.Email;
 import uk.co.nhs.api.model.User;
 import uk.co.nhs.api.responses.Message;
-import uk.co.nhs.api.responses.UserResponse;
 import uk.co.nhs.repository.UsersRepository;
 import uk.co.nhs.services.EmailService;
 import uk.co.nhs.utils.RandomPasswordGenerator;
@@ -41,8 +40,8 @@ public class UserResource {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<?> createUser(@RequestBody UserCreationRequest userCreationRequest) {
-        User user = convertToEntity(userCreationRequest);
+    public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
+        User user = convertToEntity(userDTO);
         return userCreationChecks(user);
     }
 
@@ -106,11 +105,11 @@ public class UserResource {
                     "NHS Appointment letters";
     }
 
-    private User convertToEntity(UserCreationRequest userCreationRequest) {
-        return  modelMapper.map(userCreationRequest, User.class);
+    private User convertToEntity(UserDTO userDTO) {
+        return  modelMapper.map(userDTO, User.class);
     }
 
-    private UserResponse convertToEntity(User user) {
-        return modelMapper.map(user, UserResponse.class);
+    private UserDTO convertToEntity(User user) {
+        return modelMapper.map(user, UserDTO.class);
     }
 }
