@@ -32,7 +32,7 @@ public class Appointment {
     @Column(name = "timeOfAppointment")
     private String timeOfAppointment;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "hospital_id",referencedColumnName ="id")
     @JsonIgnore
     private Hospital hospital;

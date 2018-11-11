@@ -4,16 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uk.co.nhs.api.exception.ResourceNotFoundException;
 import uk.co.nhs.api.model.Appointment;
 import uk.co.nhs.api.model.Hospital;
 import uk.co.nhs.api.model.User;
 import uk.co.nhs.api.responses.AppointmentsResponse;
 import uk.co.nhs.repository.AppoinmentsRepository;
+import uk.co.nhs.repository.HospitalsRepository;
 import uk.co.nhs.repository.UsersRepository;
 
 import java.time.LocalDate;
@@ -24,38 +22,63 @@ import java.util.Set;
 @Slf4j
 public class AppointmentResource {
 
+    public static final int NUMBER_OF_APPOINTMENTS = 2;
     @Autowired
     private UsersRepository usersRepository;
     @Autowired
+    private HospitalsRepository hospitalsRepository;
+    @Autowired
     private AppoinmentsRepository appoinmentsRepository;
 
-    @PutMapping("/user/{userId}/appointments")
-    public ResponseEntity<?> createAppointments(@PathVariable("userId") final Long userId) {
-       return  usersRepository.findById(userId)
+    @DeleteMapping("/user/{id}/appointments")
+    public ResponseEntity<?> deleteAppointments(@PathVariable("id") final Long id) {
+        return  usersRepository.findById(id)
+                .map(user ->
+                {
+                    deleteAppointments(user);
+                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+                }).orElseThrow(() -> new ResourceNotFoundException(id));
+    }
+
+
+    @PostMapping("/user/{id}/appointments")
+    public ResponseEntity<?> createAppointments(@PathVariable("id") final Long id) {
+       return  usersRepository.findById(id)
                 .map(user ->
                 {
                            createAppointments(user);
                            return new ResponseEntity<>(HttpStatus.CREATED);
 
-                }).orElseThrow(() -> new ResourceNotFoundException(userId));
+                }).orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
-    @GetMapping("/user/{userId}/appointments")
-    public ResponseEntity<?> getAppointments(@PathVariable("userId") final Long userId) {
-        return  usersRepository.findById(userId)
+    @GetMapping("/user/{id}/appointments")
+    public ResponseEntity<?> getAppointments(@PathVariable("id") final Long id) {
+        return  usersRepository.findById(id)
                 .map(user ->
                 {
                     AppointmentsResponse response = new AppointmentsResponse();
                     response.setHospitals(user.getHospitals());
                     return new ResponseEntity<>(response, HttpStatus.CREATED);
 
-                }).orElseThrow(() -> new ResourceNotFoundException(userId));
+                }).orElseThrow(() -> new ResourceNotFoundException(id));
+    }
+
+    private void deleteAppointments(User user) {
+        Set<Hospital> hospitals = new HashSet<>(user.getHospitals());
+        hospitals.stream()
+                .filter(hospital -> !hospital.getAppointments().isEmpty())
+                .forEach(hospital -> {
+                    hospital.getAppointments().clear();
+                    hospitalsRepository.save(hospital);
+        });
     }
 
     private void createAppointments(User user) {
         Set<Hospital> userHospitals = new HashSet<>(user.getHospitals());
         for(Hospital hospital : userHospitals) {
-            for(int i=1; i<=2; i++){
+            for(int i = 1; i<= NUMBER_OF_APPOINTMENTS; i++){
                 Appointment appointment = new Appointment();
                 appointment.setDateOfAppointment(createRandomDate());
                 appointment.setTimeOfAppointment("10:30");

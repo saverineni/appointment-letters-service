@@ -35,7 +35,7 @@ public class Hospital {
     @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy = "hospital")
+    @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval=true)
     private Set<Appointment> appointments = new HashSet<>();
 
 }
