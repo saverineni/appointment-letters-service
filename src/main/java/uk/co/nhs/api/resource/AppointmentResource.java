@@ -15,8 +15,7 @@ import uk.co.nhs.repository.HospitalsRepository;
 import uk.co.nhs.repository.UsersRepository;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @Slf4j
@@ -81,7 +80,7 @@ public class AppointmentResource {
             for(int i = 1; i<= NUMBER_OF_APPOINTMENTS; i++){
                 Appointment appointment = new Appointment();
                 appointment.setDateOfAppointment(createRandomDate());
-                appointment.setTimeOfAppointment("10:30");
+                appointment.setTimeOfAppointment(createRandomTime());
                 appointment.setHospital(hospital);
                 appoinmentsRepository.save(appointment);
             }
@@ -97,5 +96,10 @@ public class AppointmentResource {
         int day = createRandomIntBetween(1, 28);
         int month = createRandomIntBetween(1, 12);
         return LocalDate.of(2019, month, day);
+    }
+
+    public static String createRandomTime() {
+        List<String> times = Arrays.asList("08:30", "09:30", "10:30", "11:30am");
+        return times.get(new Random().nextInt(times.size()));
     }
 }
